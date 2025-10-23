@@ -14,9 +14,9 @@ public class MainPage {
     private final By loginButton = By.xpath(".//button[text()='Войти в аккаунт']");
     private final By personalAccountButton = By.xpath(".//a[@href='/account']");
 
-    public static By bunCategory = By.xpath(".//span[text()='Булки']/..");
-    public static By sauceCategory = By.xpath(".//span[text()='Соусы']/..");
-    public static By fillingCategory = By.xpath(".//span[text()='Начинки']/..");
+    private final By bunCategory = By.xpath(".//span[text()='Булки']/..");
+    private final By sauceCategory = By.xpath(".//span[text()='Соусы']/..");
+    private final By fillingCategory = By.xpath(".//span[text()='Начинки']/..");
 
     public MainPage(WebDriver driver) {
         this.driver = driver;
@@ -30,6 +30,18 @@ public class MainPage {
         return personalAccountButton;
     }
 
+    public By getBunCategory() {
+        return bunCategory;
+    }
+
+    public By getSauceCategory() {
+        return sauceCategory;
+    }
+
+    public By getFillingCategory() {
+        return fillingCategory;
+    }
+
     @Step("Open main page")
     public void openMainPage(WebDriver driver) {
         driver.get("https://stellarburgers.nomorepartiessite.ru/");
@@ -37,7 +49,7 @@ public class MainPage {
 
     @Step("Click on button: {buttonName}")
     public void clickButton(By buttonLocator, String buttonName) {
-                driver.findElement(buttonLocator).click();
+        driver.findElement(buttonLocator).click();
         new WebDriverWait(driver, Duration.ofSeconds(3))
                 .until(driver1 -> true);
     }
@@ -46,5 +58,6 @@ public class MainPage {
     public void assertThatCategoryIsSelected(By categoryLocator, String nameCategory) {
         String attribute = driver.findElement(categoryLocator).getAttribute("class");
         Assert.assertNotNull(attribute);
-        Assert.assertTrue(attribute.contains("tab_tab_type_current__"));    }
+        Assert.assertTrue(attribute.contains("tab_tab_type_current__"));
+    }
 }

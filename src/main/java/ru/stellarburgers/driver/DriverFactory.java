@@ -1,5 +1,6 @@
 package ru.stellarburgers.driver;
 
+import io.qameta.allure.Allure;
 import org.junit.rules.ExternalResource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -7,6 +8,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 public class DriverFactory extends ExternalResource {
 
+    private final String browserName = System.getProperty("browser");
     private WebDriver driver;
 
     public WebDriver getDriver() {
@@ -14,7 +16,7 @@ public class DriverFactory extends ExternalResource {
     }
 
     public void initDriver() {
-        if ("yandex".equals(System.getProperty("browser"))) {
+        if ("yandex".equals(browserName)) {
             startYandex();
         } else {
             startChrome();
@@ -37,6 +39,7 @@ public class DriverFactory extends ExternalResource {
     @Override
     public void before() {
         initDriver();
+        Allure.parameter("Browser", browserName);
     }
 
     @Override

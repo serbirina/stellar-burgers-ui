@@ -1,9 +1,13 @@
 package ru.stellarburgers;
 
+import com.github.javafaker.Faker;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import ru.stellarburgers.driver.DriverFactory;
 import ru.stellarburgers.model.request.UserRegistrationBody;
@@ -15,17 +19,23 @@ import static java.net.HttpURLConnection.HTTP_OK;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
 public class UserLoginTest extends BaseTest {
+    private final UserSteps userSteps = new UserSteps();
     @Rule
     public DriverFactory factory = new DriverFactory();
+    Faker faker = new Faker();
 
-    private final String email = "email@mail.test";
-    private final String password = "interstellar";
+    private String email;
+    private String password;
+    private String name;
     private String accessToken;
-    private final UserSteps userSteps = new UserSteps();
 
     @Before
     public void setUp() {
-        UserRegistrationBody userRegistrationBody = new UserRegistrationBody(email, password, "Pulsar");
+        name = faker.name().firstName();
+        email = faker.internet().safeEmailAddress();
+        password = faker.internet().password(8, 16);
+
+        UserRegistrationBody userRegistrationBody = new UserRegistrationBody(email, password, name);
 
         ValidatableResponse response = userSteps.createAUser(userRegistrationBody);
         response.statusCode(HTTP_OK).body("accessToken", notNullValue());
@@ -49,7 +59,7 @@ public class UserLoginTest extends BaseTest {
         objMainPage.clickButton(objMainPage.getPersonalAccountButton(), "personal account button on the header");
 
         ProfilePage objProfilePage = new ProfilePage(driver);
-        Assert.assertTrue(objProfilePage.isUsernameDisplayed());
+        objProfilePage.AssertThatUsernameDisplayed(name);
     }
 
     @Test
@@ -68,7 +78,7 @@ public class UserLoginTest extends BaseTest {
         objMainPage.clickButton(objMainPage.getPersonalAccountButton(), "personal account button on the header");
 
         ProfilePage objProfilePage = new ProfilePage(driver);
-        Assert.assertTrue(objProfilePage.isUsernameDisplayed());
+        objProfilePage.AssertThatUsernameDisplayed(name);
     }
 
     @Test
@@ -88,7 +98,7 @@ public class UserLoginTest extends BaseTest {
         objMainPage.clickButton(objMainPage.getPersonalAccountButton(), "personal account button on the header");
 
         ProfilePage objProfilePage = new ProfilePage(driver);
-        Assert.assertTrue(objProfilePage.isUsernameDisplayed());
+        objProfilePage.AssertThatUsernameDisplayed(name);
     }
 
     @Test
@@ -108,7 +118,7 @@ public class UserLoginTest extends BaseTest {
         objMainPage.clickButton(objMainPage.getPersonalAccountButton(), "personal account button on the header");
 
         ProfilePage objProfilePage = new ProfilePage(driver);
-        Assert.assertTrue(objProfilePage.isUsernameDisplayed());
+        objProfilePage.AssertThatUsernameDisplayed(name);
     }
 
     @After

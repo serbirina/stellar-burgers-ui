@@ -1,12 +1,10 @@
 package ru.stellarburgers;
 
+import com.github.javafaker.Faker;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.openqa.selenium.WebDriver;
 import ru.stellarburgers.driver.DriverFactory;
 import ru.stellarburgers.model.request.UserLoginBody;
@@ -23,21 +21,30 @@ public class UserRegistrationTest extends BaseTest {
     @Rule
     public DriverFactory factory = new DriverFactory();
 
-    private final String username = "Pulsar";
-    private final String email = "email@mail.test";
-    private final String password = "interstellar";
     private final UserSteps userSteps = new UserSteps();
+    Faker faker = new Faker();
+
+    private String name;
+    private String email;
+    private String password;
+
+    @Before
+    public void setUp() {
+        name = faker.name().firstName();
+        email = faker.internet().safeEmailAddress();
+        password = faker.internet().password(8, 16);
+    }
 
     @Test
     @DisplayName("User registration with valid required fields")
-    @Description("Expected result: the username field on the profile page contains the value \"Pulsar\"")
+    @Description("Expected result: the username field on the profile page contains the value \"{name}\"")
     public void registrationUserWithValidRequiredFieldsTest() {
         WebDriver driver = factory.getDriver();
 
         RegistrationPage objRegistrationPage = new RegistrationPage(driver);
         objRegistrationPage.openRegistrationPage(driver);
 
-        objRegistrationPage.completeRegistrationForm(username, email, password);
+        objRegistrationPage.completeRegistrationForm(name, email, password);
 
         LoginPage objLoginPage = new LoginPage(driver);
         objLoginPage.openLoginPage(driver);
@@ -47,7 +54,7 @@ public class UserRegistrationTest extends BaseTest {
         objMainPage.clickButton(objMainPage.getPersonalAccountButton(), "personal account button on the header");
 
         ProfilePage objProfilePage = new ProfilePage(driver);
-        Assert.assertTrue(objProfilePage.isUsernameDisplayed());
+        objProfilePage.AssertThatUsernameDisplayed(name);
     }
 
     @Test
@@ -59,7 +66,8 @@ public class UserRegistrationTest extends BaseTest {
         RegistrationPage objRegistrationPage = new RegistrationPage(driver);
         objRegistrationPage.openRegistrationPage(driver);
 
-        objRegistrationPage.completeRegistrationForm(username, email, "qwer");
+        String invalidPassword = faker.internet().password(1, 5);
+        objRegistrationPage.completeRegistrationForm(name, email, invalidPassword);
 
         Assert.assertTrue(objRegistrationPage.isInputErrorPasswordFieldDisplayed());
     }
@@ -69,7 +77,7 @@ public class UserRegistrationTest extends BaseTest {
         UserLoginBody user = new UserLoginBody(email, password);
         ValidatableResponse response = userSteps.loginUser(user);
 
-        if(response.extract().statusCode() == HTTP_OK) {
+        if (response.extract().statusCode() == HTTP_OK) {
             String accessToken = userSteps.getAccessToken(response);
 
             userSteps

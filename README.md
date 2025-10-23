@@ -21,12 +21,16 @@ Tests are implemented with Java, JUnit, Selenium, and generate Allure reports.
 ---
 ### Run Tests in the Chrome Browser
 To run the UI tests in the Chrome browser:
-`mvn clean test -Dbrowser=chrome`
+```
+mvn clean test -Dbrowser=chrome
+```
 ### Run Tests in the Yandex Browser
 You need to download the [Yandex WebDriver](https://github.com/yandex/YandexDriver/releases) before running the tests.
 
 To run the UI tests in the Yandex browser:
-`mvn clean test -Dbrowser=yandex -Dyandex-browser-driver="path/to/yandexdriver" -Dyandex-browser="path/to/Yandex"`
+```
+mvn clean test -Dbrowser=yandex -Dyandex-browser-driver="path/to/yandexdriver" -Dyandex-browser="path/to/Yandex"
+```
 
 Where:
 - `yandex-browser-driver` is the path to the Yandex WebDriver.
@@ -35,9 +39,23 @@ Where:
 ## Allure Report
 
 ### Open an Already Generated Report
-To open an already generated report, run:  
-`allure open target/allure-report`
+To open an already generated report, run:
+- To open the Allure report for the Chrome browser:
+```
+allure open target/allure-report/chrome
+```
+- To open the Allure report for the Yandex browser:
+```
+allure open target/allure-report/yandex
+```
 
 ### Generate New Report
-After running all tests, a new Allure report can be generated and opened:  
-`allure generate target/allure-results --clean -o target/allure-report`
+After running all tests, you can generate Allure reports for different browsers:
+- Generate report for Chrome browser
+```
+allure generate target/allure-results/chrome --clean -o target/allure-report/chrome
+```
+- Generate report for Yandex browser
+```
+allure generate target/allure-results/yandex --clean -o target/allure-report/yandex
+```
