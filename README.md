@@ -1,5 +1,4 @@
-# Diplom_2
-## Automated UI Tests for "Stellar Burgers"
+# Automated UI Tests for "Stellar Burgers"
 Automated UI tests cover the registration and user login scenarios and navigation between different categories in the Constructor section.
 Tests are implemented with Java, JUnit, Selenium, and generate Allure reports.
 ---
