@@ -17,7 +17,7 @@ Tests are implemented with Java, JUnit, Selenium, and generate Allure reports.
 | Selenium       |  4.37.0   |
 ---
 ## Run Tests
----
+
 ### Run Tests in the Chrome Browser
 To run the UI tests in the Chrome browser:
 ```
